@@ -37,7 +37,11 @@ IF_ON_LIST_DUMP
     static void generate_image          (const list *list_pointer, const char *name_dot_file, ssize_t number_graph);
 )
 
-#define VERIFY_LIST(list_pointer) verify_list(list_pointer, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#ifdef DEBUG_LIST
+    #define VERIFY_LIST(list_pointer) verify_list(list_pointer, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#else
+    #define VERIFY_LIST(list_pointer) 0
+#endif
 
 #define CHECK_ERRORS(list)                                          \
 do {                                                                \

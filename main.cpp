@@ -81,6 +81,8 @@ int main(int argc, const char *argv[])
     text_parametrs_destructor(&source_text);
 
     size_t t2 = __rdtsc();
+    size_t time = (t2 - t1);
+    printf("\n>>> Time of StressTest: %lu\n", time);
 
     MYASSERT(check_isclose (src_text_file_pointer), COULD_NOT_CLOSE_THE_FILE , return COULD_NOT_CLOSE_THE_FILE);
     MYASSERT(check_isclose (output_file_pointer),   COULD_NOT_CLOSE_THE_FILE , return COULD_NOT_CLOSE_THE_FILE);
@@ -121,7 +123,7 @@ errors_code write_data(hash_table *table, FILE *file_output)
             index_element_list = table->items[i].list_pointer->next[index_element_list];
         }
 
-        fprintf(file_output, "%lu %lu\n", i, cases);
+        fprintf(file_output, "%lu\n", cases);
     }
 
     return ASSERT_NO_ERROR;
@@ -135,15 +137,17 @@ errors_code stress_test(hash_table *table, text_parametrs *source_text)
     MYASSERT(source_text->buffer        != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
     MYASSERT(source_text->string_array  != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
 
+    char *unknown_word = "qwerty";
+
     for (size_t i = 0; i < AMOUNT_TESTS; i++)
     {
+        volatile TYPE_ELEMENT_LIST find_elem = hash_table_search(table, unknown_word, 6);
+
         for (size_t j = 0; j < (source_text->number_lines); j++)
         {
             volatile TYPE_ELEMENT_LIST find_elem = hash_table_search(table, source_text->string_array[i].string_pointer, source_text->string_array[i].size_string - 1);
         }
     }
-
-
 
     return ASSERT_NO_ERROR;
 }
