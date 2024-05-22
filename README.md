@@ -106,15 +106,15 @@ $$
 
 |Название хэш-функции               |Var(x) - величина дисперсии    |
 |:----------------------------------|:-----------------------------:|
-|0 Hash                             | $ 1.633 * 10^8 $              |
-|First Letter Hash                  | $ 4.033 * 10^4 $              |
-|Length Word Hash                   | $ 3.647 * 10^5 $              |
-|Sum of letters Hash                | $ 9.636 * 10^1 $              |
-|(Sum of letters)/Length Hash       | $ 6.491 * 10^4 $              |
-|ROR Hash                           | $ 7.019 * 10^0 $              |
-|ROL Hash                           | $ 2.523 * 10^0 $              |
-|Elf Hash                           | $ 1.917 * 10^0 $              |
-|CRC32 Hash                         | $ 1.861 * 10^0 $              |
+|0 Hash                             |  1.633 * 10^8               |
+|First Letter Hash                  |  4.033 * 10^4               |
+|Length Word Hash                   |  3.647 * 10^5               |
+|Sum of letters Hash                |  9.636 * 10^1               |
+|(Sum of letters)/Length Hash       |  6.491 * 10^4               |
+|ROR Hash                           |  7.019 * 10^0               |
+|ROL Hash                           |  2.523 * 10^0               |
+|Elf Hash                           |  1.917 * 10^0               |
+|CRC32 Hash                         |  1.861 * 10^0               |
 
 Лучшие функции в однородности стали CRC32, ElfHash и ROL Hash.
 
