@@ -16,12 +16,12 @@ do {                                                                            
     list_constructor(list_pointer, info);                                                       \
 } while(0)
 
-#define FORMAT_SPECIFIERS_LIST   "%d"
-typedef int TYPE_ELEMENT_LIST;
+#define FORMAT_SPECIFIERS_LIST   "%s"
+typedef const char* TYPE_ELEMENT_LIST;
 
-const ssize_t  CAPACITY_MULTIPLIER_LIST     = 2;
-const ssize_t  INITIAL_CAPACITY_VALUE_LIST  = 2;
-const int      POISON_LIST                  = 192;
+const ssize_t               MAX_SIZE_ELEM                = 30;
+const ssize_t               CAPACITY_MULTIPLIER_LIST     = 2;
+const ssize_t               INITIAL_CAPACITY_VALUE_LIST  = 2;
 
 enum errors_code_list {
     LIST_NO_ERROR                           = 0,
@@ -38,7 +38,7 @@ enum errors_code_list {
     HEAD_LESS_THAN_ZERO                     = 1 << 10,
     TAIL_LESS_THAN_ZERO                     = 1 << 11,
     FREE_POINT_TO_OCCUPIED_ELEMENT          = 1 << 12,
-    PREV_FROM_NEXT_NOT_EQUAL_ELEMENT_INDEX =  1 << 13,
+    PREV_FROM_NEXT_NOT_EQUAL_ELEMENT_INDEX  = 1 << 13,
     HEAD_POINT_TO_FREE_ELEMENT              = 1 << 14,
     TAIL_POINT_TO_FREE_ELEMENT              = 1 << 15,
 };
@@ -72,6 +72,8 @@ TYPE_ELEMENT_LIST pop_front             (list *list_pointer);
 TYPE_ELEMENT_LIST pop_back              (list *list_pointer);
 ssize_t           clear                 (list *list_pointer);
 ssize_t           find_elem_by_number   (list *list_pointer, ssize_t number_target_element_list);
+ssize_t           find_elem_by_value    (list *list_pointer, TYPE_ELEMENT_LIST value);
+
 
 
 #endif //LIST_H_INCLUDED

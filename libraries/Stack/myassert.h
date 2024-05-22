@@ -39,7 +39,9 @@ enum errors_code {
     COULD_NOT_CLOSE_THE_FILE        =  8,
     HASH_HAS_BEEN_CHANGED           =  9,
     INVALID_OPERATOR                = 10,
-    SYSTEM_ERROR                    = 11
+    SYSTEM_ERROR                    = 11,
+    EXCEEDING_MAX_SIZE              = 12,
+    THE_LEN_IS_0                    = 13
 };
 
 

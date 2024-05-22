@@ -4,7 +4,7 @@
 #include "libraries/Stack/myassert.h"
 #include "libraries/Stack/colors.h"
 #include "libraries/Onegin/onegin.h"
-#include "list.h"
+#include "hash_table.h"
 
 FILE *Global_logs_pointer  = stderr;
 bool  Global_color_output  = true;
@@ -77,7 +77,7 @@ ssize_t list_constructor(list *list_pointer, debug_info_list *info)
 
     prepare_new_free_elements(list_pointer, list_pointer->free);
 
-    list_pointer->data[0] = POISON_LIST;
+    list_pointer->data[0] = NULL;
 
     return (VERIFY_LIST(list_pointer));
 }
@@ -114,15 +114,15 @@ static void pour_poison_into_list(list *list_pointer)
 {
     for (ssize_t index_list = 0; index_list < list_pointer->capacity; index_list++)
     {
-        list_pointer->data[index_list] = POISON_LIST;
-        list_pointer->next[index_list] = POISON_LIST;
-        list_pointer->prev[index_list] = POISON_LIST;
+        list_pointer->data[index_list] = NULL;
+        list_pointer->next[index_list] = 0;
+        list_pointer->prev[index_list] = 0;
     }
 
-    list_pointer->free       = POISON_LIST;
-    list_pointer->capacity   = POISON_LIST;
+    list_pointer->free       = 0;
+    list_pointer->capacity   = 0;
 
-    list_pointer->info->line = POISON_LIST;
+    list_pointer->info->line = 0;
     list_pointer->info->func = "POISON";
     list_pointer->info->file = "POISON";
     list_pointer->info->name = "POISON";
@@ -194,25 +194,25 @@ ssize_t push_back(list *list_pointer, TYPE_ELEMENT_LIST value)
 
 TYPE_ELEMENT_LIST erase(list *list_pointer, ssize_t position)
 {
-    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
+    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
 
     CHECK_ERRORS(list_pointer);
 
     if (position >= list_pointer->capacity || position <= 0)
     {
         printf(RED "ERROR! Attempt to erase unavilable position\n" RESET_COLOR);
-        return POISON_LIST;
+        return NULL;
     }
 
     TYPE_ELEMENT_LIST return_value = list_pointer->data[position];
     list_pointer->next[list_pointer->prev[position]] = list_pointer->next[position];
     list_pointer->prev[list_pointer->next[position]] = list_pointer->prev[position];
 
-    list_pointer->data[position] = POISON_LIST;
+    list_pointer->data[position] = NULL;
     list_pointer->prev[position] = -1;
     list_pointer->next[position] = list_pointer->free;
 
@@ -225,11 +225,11 @@ TYPE_ELEMENT_LIST erase(list *list_pointer, ssize_t position)
 
 TYPE_ELEMENT_LIST pop_back(list *list_pointer)
 {
-    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
+    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
 
     CHECK_ERRORS(list_pointer);
 
@@ -240,11 +240,11 @@ TYPE_ELEMENT_LIST pop_back(list *list_pointer)
 
 TYPE_ELEMENT_LIST pop_front(list *list_pointer)
 {
-    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
-    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return POISON_LIST);
+    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
+    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL);
 
     CHECK_ERRORS(list_pointer);
 
@@ -286,6 +286,25 @@ ssize_t find_elem_by_number(list *list_pointer, ssize_t number_target_element_li
 
     for (ssize_t number_element_list = 0; number_element_list < number_target_element_list; number_element_list++)
     {
+        index_element_list = list_pointer->next[index_element_list];
+    }
+
+    return index_element_list;
+}
+
+ssize_t find_elem_by_value(list *list_pointer, TYPE_ELEMENT_LIST value)
+{
+    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+
+    CHECK_ERRORS(list_pointer);
+
+    ssize_t index_element_list = list_pointer->next[0];
+
+    while((index_element_list != 0) && (strcmp(value, list_pointer->data[index_element_list]))) {
         index_element_list = list_pointer->next[index_element_list];
     }
 
@@ -335,12 +354,12 @@ static ssize_t prepare_new_free_elements(list *list_pointer, ssize_t index_last_
 
     for (ssize_t index_free_element = index_last_element_list + 1; index_free_element < list_pointer->capacity - 1; index_free_element++)
     {
-        list_pointer->data[index_free_element] = POISON_LIST;
+        list_pointer->data[index_free_element] = NULL;
         list_pointer->next[index_free_element] = index_free_element + 1;
         list_pointer->prev[index_free_element] = -1;
     }
 
-    list_pointer->data[list_pointer->capacity - 1] = POISON_LIST;
+    list_pointer->data[list_pointer->capacity - 1] = NULL;
     list_pointer->next[list_pointer->capacity - 1] = 0;
     list_pointer->prev[list_pointer->capacity - 1] = -1;
 
@@ -384,8 +403,6 @@ static ssize_t verify_list(list *list_pointer, ssize_t line, const char *file, c
             list_dump(list_pointer, line, file, func);
         }
     )
-
-    list_dump(list_pointer, line, file, func);
 
     return list_pointer->error_code;
 }
