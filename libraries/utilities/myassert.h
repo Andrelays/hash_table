@@ -38,7 +38,9 @@ enum errors_code {
     COULD_NOT_OPEN_THE_FILE         = 7,
     COULD_NOT_CLOSE_THE_FILE        = 8,
     HASH_HAS_BEEN_CHANGED           = 9,
-    INCORRECT_NUMBER_OF_ARGC        = 10
+    INCORRECT_NUMBER_OF_ARGC        = 10,
+    EXCEEDING_MAX_SIZE              = 11,
+    
 };
 
 

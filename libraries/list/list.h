@@ -19,7 +19,7 @@ do {                                                                            
 #define FORMAT_SPECIFIERS_LIST   "%s"
 typedef const char* TYPE_ELEMENT_LIST;
 
-const ssize_t               MAX_SIZE_ELEM                = 30;
+const ssize_t               MAX_SIZE_ELEM                = 32;
 const ssize_t               CAPACITY_MULTIPLIER_LIST     = 2;
 const ssize_t               INITIAL_CAPACITY_VALUE_LIST  = 2;
 
@@ -72,8 +72,6 @@ TYPE_ELEMENT_LIST pop_front             (list *list_pointer);
 TYPE_ELEMENT_LIST pop_back              (list *list_pointer);
 ssize_t           clear                 (list *list_pointer);
 ssize_t           find_elem_by_number   (list *list_pointer, ssize_t number_target_element_list);
-ssize_t           find_elem_by_value    (list *list_pointer, TYPE_ELEMENT_LIST value);
-
 
 
 #endif //LIST_H_INCLUDED

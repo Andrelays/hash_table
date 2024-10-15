@@ -1,17 +1,6 @@
-#include <string.h>
-#include <emmintrin.h>
 #include <x86intrin.h>
-#include "myassert.h"
-#include "stack.h"
-#include "onegin.h"
-#include "hash_table.h"
 #include "utilities.h"
-
-const size_t AMOUNT_TESTS = 256;
-
-static errors_code insert_data(hash_table *table, text_parametrs *source_text);
-static errors_code write_data (hash_table *table, FILE *file_output);
-static errors_code stress_test(hash_table *table, text_parametrs *source_text);
+#include "hash_table.h"
 
 int main(int argc, const char *argv[])
 {
@@ -22,12 +11,12 @@ int main(int argc, const char *argv[])
 
     size_t t1 = __rdtsc();
 
-    const char  *file_name_input      = argv[1];
-    const char  *file_name_output     = argv[2];
+    const char  *file_name_input      =               argv[1];
+    const char  *file_name_output     =               argv[2];
     const size_t size_hash_table      = (size_t) atoi(argv[3]);
-    const int    hash_function_number = atoi(argv[4]);
+    const int    hash_function_number =          atoi(argv[4]);
 
-    MYASSERT(size_hash_table < HASH_table_MAX_SIZE, EXCEEDING_MAX_SIZE, return EXCEEDING_MAX_SIZE);
+    MYASSERT(size_hash_table < HASH_TABLE_MAX_SIZE, EXCEEDING_MAX_SIZE, return EXCEEDING_MAX_SIZE);
 
     FILE *src_text_file_pointer = check_isopen(file_name_input,  "r");
     FILE *output_file_pointer   = check_isopen(file_name_output, "w");
@@ -38,8 +27,6 @@ int main(int argc, const char *argv[])
     struct text_parametrs source_text = {};
 
     text_parametrs_constructor(&source_text, src_text_file_pointer);
-    replace_chars_to_null_character(source_text.buffer, "\n");
-    source_text.number_lines--;
 
     hash_table *main_hash_table = new_pointer_hash_table();
 
@@ -78,9 +65,11 @@ int main(int argc, const char *argv[])
         default: return 0; break;
     }
 
-    insert_data(main_hash_table, &source_text);
-    stress_test(main_hash_table, &source_text);
-    write_data(main_hash_table,  output_file_pointer);
+    hash_table_input_data(main_hash_table, &source_text);
+
+    hash_table_stress_test(main_hash_table, &source_text);
+
+    hash_table_output_data(main_hash_table,  output_file_pointer);
 
     hash_table_dtor(main_hash_table);
     text_parametrs_destructor(&source_text);
@@ -93,65 +82,5 @@ int main(int argc, const char *argv[])
     MYASSERT(check_isclose (output_file_pointer),   COULD_NOT_CLOSE_THE_FILE , return COULD_NOT_CLOSE_THE_FILE);
 
     return 0;
-}
-
-static errors_code insert_data(hash_table *table, text_parametrs *source_text)
-{
-    MYASSERT(table                      != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(table->hash_function       != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text                != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text->buffer        != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text->string_array  != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-
-    for (size_t i = 0; i < (source_text->number_lines); i++)
-    {
-        hash_table_add(table, source_text->string_array[i].string_pointer, source_text->string_array[i].size_string - 1);
-    }
-
-    return ASSERT_NO_ERROR;
-}
-
-static errors_code write_data(hash_table *table, FILE *file_output)
-{
-    MYASSERT(table                      != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(table->hash_function       != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(file_output                != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-
-    for (size_t i = 0; i < (table->size); i++)
-    {
-        size_t cases = 0;
-        ssize_t index_element_list = table->items[i].list_pointer->next[0];
-
-        while (index_element_list != 0)
-        {
-            cases++;
-            index_element_list = table->items[i].list_pointer->next[index_element_list];
-        }
-
-        fprintf(file_output, "%lu\n", cases);
-    }
-
-    return ASSERT_NO_ERROR;
-}
-
-static errors_code stress_test(hash_table *table, text_parametrs *source_text)
-{
-    MYASSERT(table                      != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(table->hash_function       != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text                != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text->buffer        != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-    MYASSERT(source_text->string_array  != NULL, NULL_POINTER_PASSED_TO_FUNC, return NULL_POINTER_PASSED_TO_FUNC);
-
-    const char *unknown_word = "qwerty";
-
-    for (size_t i = 0; i < AMOUNT_TESTS; i++)
-    {
-        for (size_t j = 0; j < (source_text->number_lines); j++)
-        {
-            volatile TYPE_ELEMENT_LIST find_elem = hash_table_search(table, source_text->string_array[i].string_pointer, source_text->string_array[i].size_string - 1);
-        }
-    }
-
-    return ASSERT_NO_ERROR;
 }
 

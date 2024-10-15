@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <immintrin.h>
 #include "hash_table.h"
@@ -151,7 +148,7 @@ size_t crc32_hash_sse(const char* str, size_t length)
 
     for (size_t i = 0; i < length; i++)
     {
-        crc = _mm_crc32_u8 (crc, str[i]);
+        crc = _mm_crc32_u8 (crc, (unsigned char)str[i]);
     };
 
     return crc ^ 0xFFFFFFFFUL;

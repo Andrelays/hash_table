@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "myassert.h"
-#include "colors.h"
-#include "onegin.h"
+#include "utilities.h"
 #include "hash_table.h"
 
 FILE *Global_logs_pointer  = stderr;
@@ -72,7 +69,7 @@ ssize_t list_constructor(list *list_pointer, debug_info_list *info)
     list_pointer->data  = (TYPE_ELEMENT_LIST *) calloc((size_t) list_pointer->capacity, sizeof(TYPE_ELEMENT_LIST));
     list_pointer->next  = (ssize_t *)           calloc((size_t) list_pointer->capacity, sizeof(ssize_t));
     list_pointer->prev  = (ssize_t *)           calloc((size_t) list_pointer->capacity, sizeof(ssize_t));
-    //FIXME: Memleak
+
     MYASSERT(list_pointer->data  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_DATA_IS_NULL);
     MYASSERT(list_pointer->next  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_NEXT_IS_NULL);
     MYASSERT(list_pointer->prev  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_PREV_IS_NULL);
@@ -296,25 +293,6 @@ ssize_t find_elem_by_number(list *list_pointer, ssize_t number_target_element_li
     return index_element_list;
 }
 
-ssize_t find_elem_by_value(list *list_pointer, TYPE_ELEMENT_LIST value)
-{
-    MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
-    MYASSERT(list_pointer->data    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
-    MYASSERT(list_pointer->next    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
-    MYASSERT(list_pointer->prev    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
-    MYASSERT(list_pointer->info    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
-
-    CHECK_ERRORS(list_pointer);
-
-    ssize_t index_element_list = list_pointer->next[0];
-
-    while((index_element_list != 0) && (strcmp(value, list_pointer->data[index_element_list]))) {
-        index_element_list = list_pointer->next[index_element_list];
-    }
-
-    return index_element_list;
-}
-
 static ssize_t check_capacity(list *list_pointer)
 {
     MYASSERT(list_pointer          != NULL, NULL_POINTER_PASSED_TO_FUNC, return POINTER_TO_LIST_IS_NULL);
@@ -336,7 +314,7 @@ static ssize_t check_capacity(list *list_pointer)
     list_pointer->data  = (TYPE_ELEMENT_LIST *) realloc(list_pointer->data, (size_t) list_pointer->capacity * sizeof(TYPE_ELEMENT_LIST));
     list_pointer->next  = (ssize_t *)           realloc(list_pointer->next, (size_t) list_pointer->capacity * sizeof(ssize_t));
     list_pointer->prev  = (ssize_t *)           realloc(list_pointer->prev, (size_t) list_pointer->capacity * sizeof(ssize_t));
-    //FIXME:
+
     MYASSERT(list_pointer->data  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_DATA_IS_NULL);
     MYASSERT(list_pointer->next  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_NEXT_IS_NULL);
     MYASSERT(list_pointer->prev  != NULL, FAILED_TO_ALLOCATE_DYNAM_MEMOR, return POINTER_TO_LIST_PREV_IS_NULL);
@@ -559,11 +537,11 @@ IF_ON_LIST_DUMP
 
         ++number_graph;
 
-        FILE *dot_file = check_isopen_old(NAME_DOT_FILE, "w");
+        FILE *dot_file = check_isopen(NAME_DOT_FILE, "w");
 
         write_log_to_dot(list_pointer, dot_file, line, file, func);
 
-        MYASSERT(check_isclose_old(dot_file), COULD_NOT_CLOSE_THE_FILE , return);
+        MYASSERT(check_isclose(dot_file), COULD_NOT_CLOSE_THE_FILE , return);
 
         generate_image(list_pointer, NAME_DOT_FILE, number_graph);
 
