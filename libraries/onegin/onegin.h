@@ -2,6 +2,7 @@
 #define ONEGIN_H_INCLUDED
 
 #include<stdio.h>
+#include"myassert.h"
 
 struct text_parametrs {
     struct string_parametrs *string_array;
@@ -18,14 +19,14 @@ typedef int (*compare_func) (const void *, const void *);
 
 void text_parametrs_constructor(struct text_parametrs *text, FILE *file_pointer);
 
+const char *skip_spaces(const char *string);
+errors_code replace_chars_to_null_character(char *text, const char *replaceable_characters);
+
 char *input_data(FILE *file_pointer);
 size_t determine_size(FILE *file_pointer);
 
 void search_strings(struct text_parametrs *text);
 size_t count_strings(const char *buffer);
-
-FILE *check_isopen_old (const char *file_name, const char *opening_mode);
-bool check_isclose_old (FILE *file_pointer);
 
 int compare_line(const void *string_parametrs_1, const void *string_parametrs_2);
 int reverse_compare_line(const void *string_parametrs_1, const void *string_parametrs_2);

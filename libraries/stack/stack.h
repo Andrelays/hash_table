@@ -96,10 +96,6 @@ struct debug_info {
     const char  *file;
     const char  *func;
 };
-bool check_argc(int argc, int correct_number);
-
-FILE *check_isopen (const char *file_name, const char *opening_mode);
-bool check_isclose (FILE *file_pointer);
 
 stack *get_pointer_stack();
 

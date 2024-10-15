@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "list.h"
-#include "libraries/Stack/myassert.h"
+#include "myassert.h"
 
 const ssize_t HASH_table_MAX_SIZE = 1500000;
 
@@ -40,6 +40,7 @@ size_t ror_hash          (const char* str, size_t length);
 size_t rol_hash          (const char* str, size_t length);
 size_t elf_hash          (const char* str, size_t length);
 size_t crc32_hash        (const char* str, size_t length);
+size_t crc32_hash_sse    (const char* str, size_t length);
 
 
 #endif //HASH_TABLE_H_INCLUDED

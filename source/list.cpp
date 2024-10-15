@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "libraries/Stack/myassert.h"
-#include "libraries/Stack/colors.h"
-#include "libraries/Onegin/onegin.h"
+#include "myassert.h"
+#include "colors.h"
+#include "onegin.h"
 #include "hash_table.h"
 
 FILE *Global_logs_pointer  = stderr;

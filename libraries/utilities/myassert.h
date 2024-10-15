@@ -14,7 +14,7 @@
  do {                                                                                                               \
     if (!(condition))                                                                                               \
     {                                                                                                               \
-        printf(MAGENTA "suddenly: Logical error: Error code: %s\n", #error_code);                                    \
+        printf(MAGENTA "suddenly: Logical error: Error code: %s\n", #error_code);                                   \
         printf("File: %s\n" "line: %d\n" "Function: %s\n" RESET_COLOR, __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
                                                                                                                     \
         finish;                                                                                                     \
@@ -28,20 +28,17 @@
 
 /// Список возможных ошибок, которые печатает MYASSERT
 enum errors_code {
-    ASSERT_NO_ERROR                 =  0,
-    NON_FINITE_NUM_PASSED_TO_FUNC   =  1,///< Указывает, что в функцию было передано не конечное число
-    NULL_POINTER_PASSED_TO_FUNC     =  2,///< Указывает, что в функцию был передан 0 указатель
-    EQUAL_POINTERS_PASSED_TO_FUNC   =  3,///< Указывает, что в функцию были переданы равные указатели
-    GOING_BEYOUND_BOUNDARY_ARRAY    =  4,///< Указывает, что индекс находится за границей массива
-    NEGATIVE_VALUE_SIZE_T           =  5,///< Указывает, что указан отрицательный размер size_t
-    FAILED_TO_ALLOCATE_DYNAM_MEMOR  =  6,
-    COULD_NOT_OPEN_THE_FILE         =  7,
-    COULD_NOT_CLOSE_THE_FILE        =  8,
-    HASH_HAS_BEEN_CHANGED           =  9,
-    INVALID_OPERATOR                = 10,
-    SYSTEM_ERROR                    = 11,
-    EXCEEDING_MAX_SIZE              = 12,
-    THE_LEN_IS_0                    = 13
+    ASSERT_NO_ERROR                 = 0,
+    NON_FINITE_NUM_PASSED_TO_FUNC   = 1,///< Указывает, что в функцию было передано не конечное число
+    NULL_POINTER_PASSED_TO_FUNC     = 2,///< Указывает, что в функцию был передан 0 указатель
+    EQUAL_POINTERS_PASSED_TO_FUNC   = 3,///< Указывает, что в функцию были переданы равные указатели
+    GOING_BEYOUND_BOUNDARY_ARRAY    = 4,///< Указывает, что индекс находится за границей массива
+    NEGATIVE_VALUE_SIZE_T           = 5,///< Указывает, что указан отрицательный размер size_t
+    FAILED_TO_ALLOCATE_DYNAM_MEMOR  = 6,
+    COULD_NOT_OPEN_THE_FILE         = 7,
+    COULD_NOT_CLOSE_THE_FILE        = 8,
+    HASH_HAS_BEEN_CHANGED           = 9,
+    INCORRECT_NUMBER_OF_ARGC        = 10
 };
 
 

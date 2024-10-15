@@ -120,10 +120,12 @@ size_t crc32_hash(const char* str, size_t length)
     MYASSERT(str    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
     MYASSERT(length != NULL, THE_LEN_IS_0,                return 0);
 
-    uint_least32_t crc_table[256] = {};
+    const size_t TABLE_LEN = 256;
+
+    uint_least32_t crc_table[TABLE_LEN] = {};
     uint_least32_t crc = 0;
 
-    for (size_t i = 0; i < 256; i++)
+    for (size_t i = 0; i < TABLE_LEN; i++)
     {
         crc = (uint_least32_t) i;
         for (size_t j = 0; j < 8; j++)
@@ -136,6 +138,21 @@ size_t crc32_hash(const char* str, size_t length)
 
     while (length--)
         crc = crc_table[(crc ^ (uint_least32_t) *str++) & 0xFF] ^ (crc >> 8);
+
+    return crc ^ 0xFFFFFFFFUL;
+}
+
+size_t crc32_hash_sse(const char* str, size_t length)
+{
+    MYASSERT(str    != NULL, NULL_POINTER_PASSED_TO_FUNC, return 0);
+    MYASSERT(length != NULL, THE_LEN_IS_0,                return 0);
+
+    uint_least32_t crc = 0;
+
+    for (size_t i = 0; i < length; i++)
+    {
+        crc = _mm_crc32_u8 (crc, str[i]);
+    };
 
     return crc ^ 0xFFFFFFFFUL;
 }
